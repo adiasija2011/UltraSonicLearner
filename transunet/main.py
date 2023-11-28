@@ -70,7 +70,7 @@ def getDataloader(args):
     print("train num:{}, val num:{}".format(len(db_train), len(db_val)))
 
     trainloader = DataLoader(db_train, batch_size=args.batch_size, shuffle=True, num_workers=8, pin_memory=False)
-    valloader = DataLoader(db_val, batch_size=args.batch_size, shuffle=False, num_workers=4)
+    valloader = DataLoader(db_val, batch_size=1, shuffle=False, num_workers=4)
 
     return trainloader, valloader
 

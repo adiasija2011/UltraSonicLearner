@@ -49,14 +49,12 @@ seed_torch(args.seed)
 
 def get_model(args):
     model = get_transformer_based_model(model_name=args.model, img_size=args.img_size,
-                                            num_classes=args.num_classes, in_ch=3).cuda()
+                                        num_classes=args.num_classes, in_ch=3).cuda()
     return model
 
 
 def getDataloader(args):
     img_size = args.img_size
-    if args.model == "SwinUnet":
-        img_size = 224
     train_transform = Compose([
         RandomRotate90(),
         transforms.Flip(),
@@ -68,28 +66,23 @@ def getDataloader(args):
         Resize(img_size, img_size),
         transforms.Normalize(),
     ])
-    db_train = MedicalDataSets(base_dir=args.base_dir, split="train",
-                               transform=train_transform, train_file_dir=args.train_file_dir,
-                               val_file_dir=args.val_file_dir)
     db_val = MedicalDataSets(base_dir=args.base_dir, split="test", transform=val_transform,
                              train_file_dir=args.train_file_dir, test_file_dir=args.test_file_dir)
-    print("train num:{}, test num:{}".format(len(db_train), len(db_val)))
+    print("test num:{}", len(db_val))
 
-    trainloader = DataLoader(db_train, batch_size=args.batch_size, shuffle=True, num_workers=8, pin_memory=False)
-    valloader = DataLoader(db_val, batch_size=args.batch_size, shuffle=False, num_workers=4)
+    valloader = DataLoader(db_val, batch_size=1, shuffle=False, num_workers=4)
 
-    return trainloader, valloader
+    return valloader
 
 
 def main(args):
-
-    _, valloader = getDataloader(args=args)
+    valloader = getDataloader(args=args)
 
     model = get_model(args)
     model = torch.nn.DataParallel(model, device_ids=[0])
     model.load_state_dict(torch.load(args.ckpt, map_location='cpu'))
 
-    print("train file dir:{} val file dir:{}".format(args.train_file_dir, args.val_file_dir))
+    print("train file dir:{} test file dir:{}".format(args.train_file_dir, args.val_file_dir))
 
     criterion = losses.__dict__['BCEDiceLoss']().cuda()
 
@@ -104,20 +97,20 @@ def main(args):
                   'val_ACC': AverageMeter()}
 
     avg_meters_benign = {'val_loss': AverageMeter(),
-                  'val_iou': AverageMeter(),
-                  'val_dice': AverageMeter(),
-                  'val_SE': AverageMeter(),
-                  'val_PC': AverageMeter(),
-                  'val_F1': AverageMeter(),
-                  'val_ACC': AverageMeter()}
+                         'val_iou': AverageMeter(),
+                         'val_dice': AverageMeter(),
+                         'val_SE': AverageMeter(),
+                         'val_PC': AverageMeter(),
+                         'val_F1': AverageMeter(),
+                         'val_ACC': AverageMeter()}
 
     avg_meters_malignant = {'val_loss': AverageMeter(),
-                  'val_iou': AverageMeter(),
-                  'val_dice': AverageMeter(),
-                  'val_SE': AverageMeter(),
-                  'val_PC': AverageMeter(),
-                  'val_F1': AverageMeter(),
-                  'val_ACC': AverageMeter()}
+                            'val_iou': AverageMeter(),
+                            'val_dice': AverageMeter(),
+                            'val_SE': AverageMeter(),
+                            'val_PC': AverageMeter(),
+                            'val_F1': AverageMeter(),
+                            'val_ACC': AverageMeter()}
 
     model.eval()
     with torch.no_grad():
@@ -157,8 +150,9 @@ def main(args):
 
     print('Overall Test_loss %.4f - Overall Test_iou %.4f - Overall Test_dice %.4f - Overall Test_SE %.4f - '
           'Test_PC %.4f - Test_F1 %.4f - Test_ACC %.4f '
-          % (avg_meters['val_loss'].avg, avg_meters['val_iou'].avg, avg_meters['val_dice'].avg, avg_meters['val_SE'].avg,
-             avg_meters['val_PC'].avg, avg_meters['val_F1'].avg, avg_meters['val_ACC'].avg))
+          % (
+          avg_meters['val_loss'].avg, avg_meters['val_iou'].avg, avg_meters['val_dice'].avg, avg_meters['val_SE'].avg,
+          avg_meters['val_PC'].avg, avg_meters['val_F1'].avg, avg_meters['val_ACC'].avg))
 
     print('Benign Test_loss %.4f - Benign Test_iou %.4f - Benign Test_dice %.4f - Benign Test_SE %.4f - '
           'Test_PC %.4f - Test_F1 %.4f - Test_ACC %.4f '
