@@ -1,6 +1,7 @@
 from .vit_seg_modeling import VisionTransformer as ViT_seg
 from .vit_seg_modeling import CONFIGS as CONFIGS_ViT_seg
 from torch import nn
+import numpy as np
 
 
 class TransUnet(nn.Module):
@@ -11,6 +12,7 @@ class TransUnet(nn.Module):
         config_vit.n_skip = 3
         config_vit.patches.grid = (int(256 / 16), int(256 / 16))
         self.net = ViT_seg(config_vit, img_size=256, num_classes=output_ch).cuda()
+        self.net.load_from(weights=np.load(config_vit.pretrained_path))
 
     def forward(self, x):
         return self.net(x)
