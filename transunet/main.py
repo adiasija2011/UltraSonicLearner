@@ -4,7 +4,7 @@ import random
 import numpy as np
 import torch
 import torch.optim as optim
-
+import wandb
 from torch.utils.data import DataLoader
 from src.dataloader.dataset import MedicalDataSets
 from albumentations.augmentations import transforms
@@ -76,6 +76,11 @@ def getDataloader(args):
 
 
 def main(args):
+    #intialise wandb run 
+    wandb.init(project='ultrasoniclearners', entity='adiasija10')
+    # log args 
+    wandb.config.update(args)
+    
     base_lr = args.base_lr
 
     trainloader, valloader = getDataloader(args=args)
@@ -125,6 +130,9 @@ def main(args):
             iter_num = iter_num + 1
             avg_meters['loss'].update(loss.item(), img_batch.size(0))
             avg_meters['iou'].update(iou, img_batch.size(0))
+            # Log training metrics to W&B
+            wandb.log({"train_loss": avg_meters['loss'].avg, "train_iou": avg_meters['iou'].avg})
+
 
         model.eval()
         with torch.no_grad():
@@ -141,7 +149,13 @@ def main(args):
                 avg_meters['val_F1'].update(F1, img_batch.size(0))
                 avg_meters['val_ACC'].update(ACC, img_batch.size(0))
 
-        print('epoch [%d/%d]  train_loss : %.4f, train_iou: %.4f - val_loss %.4f - val_iou %.4f - val_SE %.4f - '
+            # Log validation metrics to W&B
+            wandb.log({"val_loss": avg_meters['val_loss'].avg, "val_iou": avg_meters['val_iou'].avg, 
+                    "val_SE": avg_meters['val_SE'].avg, "val_PC": avg_meters['val_PC'].avg, 
+                    "val_F1": avg_meters['val_F1'].avg, "val_ACC": avg_meters['val_ACC'].avg})
+
+
+            print('epoch [%d/%d]  train_loss : %.4f, train_iou: %.4f - val_loss %.4f - val_iou %.4f - val_SE %.4f - '
               'val_PC %.4f - val_F1 %.4f - val_ACC %.4f '
             % (epoch_num, max_epoch, avg_meters['loss'].avg, avg_meters['iou'].avg,
                avg_meters['val_loss'].avg, avg_meters['val_iou'].avg, avg_meters['val_SE'].avg,
@@ -159,3 +173,5 @@ def main(args):
 
 if __name__ == "__main__":
     main(args)
+    # Close the W&B run
+    wandb.finish()
