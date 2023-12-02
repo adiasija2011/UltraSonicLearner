@@ -53,6 +53,7 @@ python main.py --model TransUnet --base_dir ./data/combined --train_file_dir com
 ```python
 python test.py --model TransUnet --base_dir ./data/busi  --batch_size 1 --test_file_dir busi_test.txt --ckpt ./checkpoint/[checkpoint]
 ```
+Download checkpoints from [here](https://drive.google.com/drive/folders/1hh24cJbeBt5yol8UwkjxyI1iyAfUVrcM?usp=sharing).
 Predictions will be stored in ```results/```.
 ## Bar Plots
 
@@ -61,7 +62,6 @@ python bar_plot.py
 ```
 
 Metrics need to be manually updated in ```bar_plot.py```. Bar plot will be saved as ```All.png```. ```bar_plot.py``` also opens an interactive bar plot.
-Download checkpoints from [here](https://drive.google.com/drive/folders/1hh24cJbeBt5yol8UwkjxyI1iyAfUVrcM?usp=sharing).
 
 ## Acknowledgements:
 
