@@ -77,7 +77,7 @@ def getDataloader(args):
 
 def main(args):
     #intialise wandb run 
-    wandb.init(project='ultrasoniclearners', entity='adiasija10')
+    wandb.init(project='ultrasoniclearners')
     # log args 
     wandb.config.update(args)
     

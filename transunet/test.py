@@ -13,6 +13,7 @@ from albumentations import RandomRotate90, Resize
 import src.utils.losses as losses
 from src.utils.util import AverageMeter
 from src.utils.metrics import iou_score
+from src.utils.util import save_results
 
 from src.network.transfomer_based.transformer_based_network import get_transformer_based_model
 
@@ -33,7 +34,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, default="U_Net",
                     choices=["TransUnet"], help='model')
 parser.add_argument('--base_dir', type=str, default="./data/busi", help='dir')
-parser.add_argument('--train_file_dir', type=str, default="busi_train.txt", help='dir')
 parser.add_argument('--val_file_dir', type=str, default="busi_val.txt", help='dir')
 parser.add_argument('--test_file_dir', type=str, default="busi_test.txt", help='dir')
 parser.add_argument('--base_lr', type=float, default=0.01, help='segmentation network learning rate')
@@ -68,7 +68,7 @@ def getDataloader(args):
     ])
     db_val = MedicalDataSets(base_dir=args.base_dir, split="test", transform=val_transform,
                              train_file_dir=args.train_file_dir, test_file_dir=args.test_file_dir)
-    print("test num:{}", len(db_val))
+    print("test num:{}".format(len(db_val)))
 
     valloader = DataLoader(db_val, batch_size=1, shuffle=False, num_workers=4)
 
@@ -82,7 +82,7 @@ def main(args):
     model = torch.nn.DataParallel(model, device_ids=[0])
     model.load_state_dict(torch.load(args.ckpt, map_location='cpu'))
 
-    print("train file dir:{} test file dir:{}".format(args.train_file_dir, args.val_file_dir))
+    print("test file dir:{}".format(args.test_file_dir))
 
     criterion = losses.__dict__['BCEDiceLoss']().cuda()
 
@@ -120,6 +120,7 @@ def main(args):
             img_batch, label_batch = img_batch.cuda(), label_batch.cuda()
             output = model(img_batch)
             loss = criterion(output, label_batch)
+            save_results(img_batch, output, label_batch, batch_idx=i_batch)
             iou, dice, SE, PC, F1, _, ACC = iou_score(output, label_batch)
 
             avg_meters['val_loss'].update(loss.item(), img_batch.size(0))
