@@ -60,7 +60,7 @@ Predictions will be stored in ```results/```.
 python bar_plot.py
 ```
 
-Metrics need to be manually updated in ```bar_plot.py```. Bar plot will be saved as ```All.png```.
+Metrics need to be manually updated in ```bar_plot.py```. Bar plot will be saved as ```All.png```. ```bar_plot.py``` also opens an interactive bar plot.
 Download checkpoints from [here](https://drive.google.com/drive/folders/1hh24cJbeBt5yol8UwkjxyI1iyAfUVrcM?usp=sharing).
 
 ## Acknowledgements:
