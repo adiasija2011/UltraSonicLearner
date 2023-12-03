@@ -67,7 +67,7 @@ def getDataloader(args):
         transforms.Normalize(),
     ])
     db_val = MedicalDataSets(base_dir=args.base_dir, split="test", transform=val_transform,
-                             train_file_dir=args.train_file_dir, test_file_dir=args.test_file_dir)
+                             test_file_dir=args.test_file_dir)
     print("test num:{}".format(len(db_val)))
 
     valloader = DataLoader(db_val, batch_size=1, shuffle=False, num_workers=4)
