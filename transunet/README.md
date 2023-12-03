@@ -7,7 +7,7 @@ Implements TransUnet for Breast Ultrasound Segmentation
 
 ## Datasets
 
-Download the required dataset from [here](https://drive.google.com/drive/folders/1vGGN60RbPdRD1mKOE3hmvCYFjEaBBwN-?usp=sharing) and put it under ```data/```. For instance, the combined dataset should look like this:
+Download the required dataset from (mention BUSi and OASBUD links) and put it under ```data/```. For instance, the combined dataset should look like this:
 
 ```
 ├── root
