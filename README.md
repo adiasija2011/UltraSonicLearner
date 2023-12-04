@@ -66,7 +66,7 @@ Metrics need to be manually updated in ```bar_plot.py```. Bar plot will be saved
 
 ## Acknowledgements:
 
-This code borrows heavily from [Medical-Image_Segmentation-Benchmarks](https://github.com/FengheTan9/Medical-Image-Segmentation-Benchmarks). This code-base uses helper functions from [CMU-Net](https://github.com/FengheTan9/CMU-Net) and [Image_Segmentation](https://github.com/LeeJunHyun/Image_Segmentation).
+This code borrows from [Medical-Image_Segmentation-Benchmarks](https://github.com/FengheTan9/Medical-Image-Segmentation-Benchmarks). This code-base uses helper functions from [CMU-Net](https://github.com/FengheTan9/CMU-Net) and [Image_Segmentation](https://github.com/LeeJunHyun/Image_Segmentation).
 
 ## Other QS:
 
