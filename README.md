@@ -70,5 +70,5 @@ This code borrows from [Medical-Image_Segmentation-Benchmarks](https://github.co
 
 ## Other QS:
 
-If you have any questions or suggestions about this project, please contact us through email:sudarshanrajagopalan2002@gmail.com, email:adiasija@gmail.com, email:dhananjayagrad@gmail.com.
+If you have any questions or suggestions about this project, please contact us through email: sudarshanrajagopalan2002@gmail.com, adiasija@gmail.com, dhananjayagrad@gmail.com.
 
