@@ -37,14 +37,13 @@ Download the required dataset from [BUSI](https://scholar.cu.edu.eg/?q=afahmy/pa
 
 ## Environments
 
-- GPU: NVIDIA GeForce RTX4090 GPU
 - Pytorch: 1.13.0 cuda 11.7
 - cudatoolkit: 11.7.1
 - scikit-learn: 1.0.2
 
 ## Training
 
-Then, training and validating your dataset:
+For training, run the following command:
 
 ```python
 python main.py --model TransUnet --base_dir ./data/combined --train_file_dir combined_train.txt --val_file_dir combined_val.txt --base_lr 0.01 --epoch 300 --batch_size 8
