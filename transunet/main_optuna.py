@@ -105,7 +105,6 @@ def objective(trial):
             loss.backward()
             optimizer.step()
 
-            iter_num = iter_num + 1
             avg_meters['loss'].update(loss.item(), img_batch.size(0))
             avg_meters['iou'].update(iou, img_batch.size(0))
 
